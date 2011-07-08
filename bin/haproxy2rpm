@@ -2,6 +2,8 @@
 
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
+require 'rubygems'
+require 'optparse'
 
 NEW_RELIC_CONFIG_PATH = File.join(ENV['HOME'], '.newrelic', 'newrelic.yml')
 
@@ -14,9 +16,30 @@ Basic Command Line Usage:
   Coniguration for newrelic is read from #{NEW_RELIC_CONFIG_PATH}
 HELP
 
-require 'haproxy_rpm'
+options = { :daemonize => false, :version => false }
+
+opts = OptionParser.new do |opts|
+  opts.banner = help
+  opts.on("-D", "--daemonize", "Daemonize") do
+    options[:daemonize] = true
+  end
+  
+  opts.on("-v", "--version", "Print the version number and exit") do
+    options[:version] = true
+  end
+end
+
+opts.parse!
+
+require 'haproxy2rpm'
 
 log_file = ARGV[0] || ''
+
+if(options[:version])
+ puts "Haproxy2Rpm version: #{Haproxy2Rpm::VERSION}"
+ exit(0)
+end
+
 unless File.exists?(log_file)
   puts 'please proivde a valid path to a haproxy log file'
   puts ''
@@ -29,10 +52,12 @@ unless File.exists?(NEW_RELIC_CONFIG_PATH)
   exit(1)
 end
 
-trap("SIGINT") { 
-  HaproxyRpm.stop
-  exit(0)
-}
-
-HaproxyRpm.run(log_file)
-
+if(options[:daemonize])
+  puts 'dameon mode not implemented yet'
+else
+  trap("SIGINT") { 
+    Haproxy2Rpm.stop
+    exit(0)
+  }
+  Haproxy2Rpm.run(log_file)
+end

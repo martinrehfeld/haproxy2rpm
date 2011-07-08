@@ -2,10 +2,10 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__)))
 
 require "newrelic_rpm"
 require "eventmachine"
+require "eventmachine-tail"
 require "haproxy2rpm/version"
 require "haproxy2rpm/file_parser"
 require "haproxy2rpm/line_parser"
-require "haproxy2rpm/reader"
 
 module Haproxy2Rpm
   def self.run(log_file)
