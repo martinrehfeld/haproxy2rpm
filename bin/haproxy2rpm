@@ -52,12 +52,8 @@ unless File.exists?(NEW_RELIC_CONFIG_PATH)
   exit(1)
 end
 
-if(options[:daemonize])
-  puts 'dameon mode not implemented yet'
-else
-  trap("SIGINT") { 
-    Haproxy2Rpm.stop
-    exit(0)
-  }
-  Haproxy2Rpm.run(log_file)
-end
+trap("SIGINT") { 
+  Haproxy2Rpm.stop
+  exit(0)
+}
+Haproxy2Rpm.run(log_file, options)
