@@ -14,8 +14,7 @@ module Haproxy2Rpm
     EventMachine.run do
       EventMachine::file_tail(log_file) do |filetail, line|
         request = LineParser.new(line)
-        stats_engine.get_stats('Controllers/main/login',false).record_data_point(request.tr)
-        stats_engine.get_stats('Controllers/response_times',false).record_data_point(request.tr)
+        stats_engine.get_stats('Custom/HAProxy/response_times',false).record_data_point(request.tr)
       end
     end
   end
