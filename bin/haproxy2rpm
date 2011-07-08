@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
+
+
+NEW_RELIC_CONFIG_PATH = File.join(ENV['HOME'], '.newrelic', 'newrelic.yml')
+
+help = <<HELP
+haproxy2rpm
+
+Basic Command Line Usage:
+  haproxy2rpm <haproxy log file to parse>
+
+  Coniguration for newrelic is read from #{NEW_RELIC_CONFIG_PATH}
+HELP
+
+require 'haproxy_rpm'
+
+log_file = ARGV[0] || ''
+unless File.exists?(log_file)
+  puts 'please proivde a valid path to a haproxy log file'
+  puts ''
+  puts help
+  exit(1)
+end
+
+unless File.exists?(NEW_RELIC_CONFIG_PATH)
+  puts "please copy your newrelic agent configuration to #{NEW_RELIC_CONFIG_PATH}"
+  exit(1)
+end
+
+trap("SIGINT") { 
+  HaproxyRpm.stop
+  exit(0)
+}
+
+HaproxyRpm.run(log_file)
+
