@@ -6,3 +6,20 @@ such as erlang or node.js based applications
 
 * copy your newrelic.yml file to $HOME/.newrelic/newrelic.yml
 * or set $NRCONFIG to point to your newrelic.yml file
+
+## Running it
+haproxy2rpm /path/to/logfile
+
+## Analyzing it
+
+At the moment, it only works with custom views
+
+<verbatim>
+  <h3>Charts</h3>
+  <table width='100%'>
+    <tr>
+    <td>line_chart {% line_chart value:'average_value' title:'Test' metric:'Controllers/main/login' %}</td>
+  </tr>
+
+  </table>
+</verbatim/>
