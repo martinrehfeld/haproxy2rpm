@@ -4,11 +4,13 @@ such as erlang or node.js based applications
 
 ## Installation
 
+gem install haproxy2rpm or clone it
+
 * copy your newrelic.yml file to $HOME/.newrelic/newrelic.yml
 * or set $NRCONFIG to point to your newrelic.yml file
 
 ## Running it
-haproxy2rpm /path/to/logfile
+haproxy2rpm /path/to/logfile or ./bin/haproxy2rpm /path/to/log/file
 
 ## Analyzing it
 
