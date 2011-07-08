@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.description = "Sending haproxy logs to new relic rpm"
   s.add_dependency "newrelic_rpm"
   s.add_dependency "eventmachine-tail"
+  s.add_development_dependency "rake"
   s.add_development_dependency "shoulda-context"
 
   s.files         = `git ls-files`.split("\n")
