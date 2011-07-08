@@ -18,8 +18,15 @@ At the moment, it only works with custom views
   <h3>Charts</h3>
   <table width='100%'>
     <tr>
-    <td>line_chart {% line_chart value:'average_value' title:'Test' metric:'Controllers/main/login' %}</td>
+    <td>line_chart {% line_chart value:'average_value' title:'Test' metric:'Custom/HAProxy/response_times' %}</td>
   </tr>
 
   </table>
 </verbatim/>
+
+
+## Roadmap
+
+* daemonize option
+* syslog (udp maybe tcp) server with https://github.com/melito/em-syslog and then point HaProxy to that port. Why touch the disk if we don't have to?
+* Figure out how to report rpms and response times so that they show up inside the newrelic application view and not only as a custom metric
