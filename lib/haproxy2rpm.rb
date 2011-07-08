@@ -6,14 +6,21 @@ require "eventmachine-tail"
 require "haproxy2rpm/version"
 require "haproxy2rpm/file_parser"
 require "haproxy2rpm/line_parser"
+require "haproxy2rpm/syslog"
+require "haproxy2rpm/rpm"
 
 module Haproxy2Rpm
   def self.run(log_file, options)
+    @rpm = Rpm.new
     if(options[:daemonize])
       puts 'daemonizing'
       run_daemonized(log_file, options)
     else
-      default_run(log_file, options)
+      if(options[:syslog])
+        run_syslog_server(options)
+      else
+        default_run(log_file, options)
+      end
     end
   end
 
@@ -22,23 +29,31 @@ module Haproxy2Rpm
     NewRelic::Agent.shutdown
   end
   
-  def self.default_run(log_file,options)
+  def self.run_syslog_server(options)
     NewRelic::Agent.manual_start
-    stats_engine = NewRelic::Agent.agent.stats_engine
+    EventMachine::run do
+      EventMachine.start_server("0.0.0.0", 3333, SyslogHandler)
+    end      
+  end
+  
+  def self.default_run(log_file,options)
     EventMachine.run do
       EventMachine::file_tail(log_file) do |filetail, line|
-        request = LineParser.new(line)
-        stats_engine.get_stats('Custom/HAProxy/response_times',false).record_data_point(request.tr)
+        @rpm.send(line)
       end
     end
   end
-  
+    
   def self.run_daemonized(log_file, options)
       Signal.trap('HUP') {}
       
       pid = fork do
         begin
-          default_run(log_file, options)
+          if(options[:syslog])
+            run_syslog_server(options)
+          else
+            default_run(log_file, options)
+          end
         rescue => e
           puts e.message
           puts e.backtrace.join("\n")

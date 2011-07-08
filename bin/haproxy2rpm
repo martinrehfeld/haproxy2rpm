@@ -16,14 +16,17 @@ Basic Command Line Usage:
   Coniguration for newrelic is read from #{NEW_RELIC_CONFIG_PATH}
 HELP
 
-options = { :daemonize => false, :version => false }
+options = { :daemonize => false, :version => false, :syslog => false }
 
 opts = OptionParser.new do |opts|
   opts.banner = help
   opts.on("-D", "--daemonize", "Daemonize") do
     options[:daemonize] = true
   end
-  
+
+  opts.on("-s", "--syslog", "Run syslog server") do
+    options[:syslog] = true
+  end  
   opts.on("-v", "--version", "Print the version number and exit") do
     options[:version] = true
   end
@@ -40,7 +43,7 @@ if(options[:version])
  exit(0)
 end
 
-unless File.exists?(log_file)
+unless options[:syslog] || File.exists?(log_file)
   puts 'please proivde a valid path to a haproxy log file'
   puts ''
   puts help

@@ -30,5 +30,5 @@ At the moment, it only works with custom views
 ## Roadmap
 
 * daemonize option
-* syslog (udp maybe tcp) server with https://github.com/melito/em-syslog and then point HaProxy to that port. Why touch the disk if we don't have to?
+* syslog (udp maybe tcp) server with https://github.com/loggly/logporter and then point HaProxy to that port. Why touch the disk if we don't have to?
 * Figure out how to report rpms and response times so that they show up inside the newrelic application view and not only as a custom metric
