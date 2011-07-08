@@ -9,7 +9,7 @@ require "haproxy2rpm/reader"
 
 module Haproxy2Rpm
   def self.run(log_file)
-    NewRelic::Agent.manual_start :app_name => 'MLI RPM TEST'
+    NewRelic::Agent.manual_start
     stats_engine = NewRelic::Agent.agent.stats_engine
     EventMachine.run do
       EventMachine::file_tail(log_file) do |filetail, line|
