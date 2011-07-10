@@ -1,6 +1,3 @@
-# Repo has moved
-You can find it [here](https://github.com/wooga/haproxy2rpm)
-
 # Push haproxy logs to newrelic rpm
 This is useful for languages where newrelic does not provide an agent,
 such as erlang or node.js based applications
