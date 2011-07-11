@@ -13,7 +13,7 @@ module Haproxy2Rpm
       request = LineParser.new(line)
       NewRelic::Agent.record_transaction(
         request.tr / 1000.0,
-        'metric' => "Controller#{request.path}",
+        'metric' => "Controller#{request.http_path}",
         'is_error' => request.is_error?,
         'error_message' => "#{request.uri} : Status code #{request.status_code}"
       )
