@@ -5,14 +5,6 @@ $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 require 'rubygems'
 require 'optparse'
 
-NEW_RELIC_CONFIG_PATH = File.join(ENV['HOME'], '.newrelic', 'newrelic.yml')
-
-help = <<HELP
-haproxy2rpm
-
-Coniguration for newrelic is read from #{NEW_RELIC_CONFIG_PATH}
-HELP
-
 options = {
   :daemonize => false,
   :version => false,
@@ -22,7 +14,6 @@ options = {
 }
 
 opts = OptionParser.new do |opts|
-#  opts.banner = help
   opts.on("-D", "--daemonize", "Daemonize") do
     options[:daemonize] = true
   end
@@ -48,7 +39,6 @@ opts = OptionParser.new do |opts|
   end
 
   opts.on_tail("-h", "--help", "Show this message") do
-    puts opts.banner
     puts opts
     exit
   end
@@ -72,13 +62,7 @@ end
 unless options[:syslog] || File.exists?(log_file)
   puts 'please proivde a valid path to a haproxy log file'
   puts ''
-  puts help
   puts opts
-  exit(1)
-end
-
-unless File.exists?(NEW_RELIC_CONFIG_PATH)
-  puts "please copy your newrelic agent configuration to #{NEW_RELIC_CONFIG_PATH}"
   exit(1)
 end
 
