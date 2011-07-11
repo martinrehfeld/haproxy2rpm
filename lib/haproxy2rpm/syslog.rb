@@ -26,15 +26,17 @@ module Haproxy2Rpm
         # Ruby 1.8 doesn't support named captures
         # replace (?<foo> with (
         re = re.gsub(/\(\?<[^>]+>/, "(")
+        @match_index = 4
+      else
+        @match_index = :message
       end
 
       @syslog3164_re = Regexp.new(re)
     end
 
     def receive_data(data)
-      puts data
       m = @syslog3164_re.match(data)
-      @rpm.send(m[:message])
+      @rpm.send(m[@match_index])
     end
   end
 end
