@@ -18,7 +18,7 @@ options = {
   :version => false,
   :syslog => false,
   :port => 3333,
-  :ip => '0.0.0.0'
+  :listen => '0.0.0.0'
 }
 
 opts = OptionParser.new do |opts|
