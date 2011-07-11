@@ -28,14 +28,14 @@ module Haproxy2Rpm
     puts 'stopping new relic agent'
     NewRelic::Agent.shutdown
   end
-  
+
   def self.run_syslog_server(options)
     NewRelic::Agent.manual_start
     EventMachine::run do
-      EventMachine.start_server("0.0.0.0", 3333, SyslogHandler)
-    end      
+      EventMachine::open_datagram_socket("127.0.0.1", 3333, SyslogHandler)
+    end
   end
-  
+
   def self.default_run(log_file,options)
     EventMachine.run do
       EventMachine::file_tail(log_file) do |filetail, line|

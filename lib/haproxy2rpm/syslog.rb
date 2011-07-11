@@ -29,21 +29,10 @@ module Haproxy2Rpm
       end
 
       @syslog3164_re = Regexp.new(re)
-    end # def initialize
+    end
 
     def receive_data(data)
-      # In jruby+netty, we probaby should use the DelimiterBasedFrameDecoder
-      # But for the sake of simplicity, we'll use EM's BufferedTokenizer for
-      # all implementations.
-      @buffer.extract(data).each do |line|
-        receive_line(line.chomp)
-      end
-    end # def receive_event
-
-    def receive_line(line)
-      @count += 1
-      # Just try matching, don't need to do anything with it for this benchmark.
-      m = @syslog3164_re.match(line)
+      m = @syslog3164_re.match(data)
       @rpm.send(m[:message])
     end
   end
