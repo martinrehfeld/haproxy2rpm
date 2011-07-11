@@ -16,6 +16,4 @@ gem install haproxy2rpm or clone it
 
 ## Roadmap
 
-* Adding error messages
-* test behavior with / uri path
 * test behavior with params
