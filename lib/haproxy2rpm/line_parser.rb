@@ -39,6 +39,10 @@ module Haproxy2Rpm
       @uri ||= @parts[14]
     end
 
+    def is_error?
+      status_code >= 500
+    end
+
     private
 
     def response_times
