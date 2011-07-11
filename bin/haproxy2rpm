@@ -16,7 +16,13 @@ Basic Command Line Usage:
   Coniguration for newrelic is read from #{NEW_RELIC_CONFIG_PATH}
 HELP
 
-options = { :daemonize => false, :version => false, :syslog => false }
+options = {
+  :daemonize => false,
+  :version => false,
+  :syslog => false,
+  :port => 3333,
+  :ip => '0.0.0.0'
+}
 
 opts = OptionParser.new do |opts|
   opts.banner = help
@@ -26,7 +32,24 @@ opts = OptionParser.new do |opts|
 
   opts.on("-s", "--syslog", "Run syslog server") do
     options[:syslog] = true
-  end  
+  end
+
+  opts.on("-lIP", "--listen IP", "Set IP to listen on") do |ip|
+    options[:listen] = ip
+  end
+
+  opts.on("-pPORT", "--port PORT", "Set port to listen on") do |port|
+    options[:port] = port
+  end
+
+  opts.on("-nAPP_NAME", "--app_name APP_NAME", "Set application name") do |app_name|
+    options[:app_name] = app_name
+  end
+
+  opts.on("-eENVIRONMENT", "--environment ENVIRONMENT", "Set Newrelic agent env") do |env|
+    options[:env] = env
+  end
+
   opts.on("-v", "--version", "Print the version number and exit") do
     options[:version] = true
   end

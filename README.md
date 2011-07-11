@@ -10,25 +10,12 @@ gem install haproxy2rpm or clone it
 * or set $NRCONFIG to point to your newrelic.yml file
 
 ## Running it
-haproxy2rpm /path/to/logfile or ./bin/haproxy2rpm /path/to/log/file
-
-## Analyzing it
-
-At the moment, it only works with custom views
-
-<verbatim>
-  <h3>Charts</h3>
-  <table width='100%'>
-    <tr>
-    <td>line_chart {% line_chart value:'average_value' title:'Test' metric:'Custom/HAProxy/response_times' %}</td>
-  </tr>
-
-  </table>
-</verbatim/>
-
+    haproxy2rpm /path/to/logfile 
+    haproxy2rpm --syslog
+    haproxy2rpm --syslog --daemonize
 
 ## Roadmap
 
-* daemonize option
-* syslog (udp maybe tcp) server with https://github.com/loggly/logporter and then point HaProxy to that port. Why touch the disk if we don't have to?
-* Figure out how to report rpms and response times so that they show up inside the newrelic application view and not only as a custom metric
+* Adding error messages
+* test behavior with / uri path
+* test behavior with params

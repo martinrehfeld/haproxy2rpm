@@ -11,7 +11,7 @@ require "haproxy2rpm/rpm"
 
 module Haproxy2Rpm
   def self.run(log_file, options)
-    @rpm = Rpm.new
+    @rpm = Rpm.new(options)
     if(options[:daemonize])
       puts 'daemonizing'
       run_daemonized(log_file, options)
@@ -30,9 +30,8 @@ module Haproxy2Rpm
   end
 
   def self.run_syslog_server(options)
-    NewRelic::Agent.manual_start
     EventMachine::run do
-      EventMachine::open_datagram_socket("127.0.0.1", 3333, SyslogHandler)
+      EventMachine::open_datagram_socket(options[:listen], options[:port], SyslogHandler)
     end
   end
 

@@ -1,10 +1,13 @@
 module Haproxy2Rpm
   class Rpm
-    def initialize()
-      NewRelic::Agent.manual_start
+    def initialize(options = {})
+      agent_options = {}
+      agent_options[:app_name] = options[:app_name] if options[:app_name]
+      agent_options[:env] = options[:env] if options[:env]
+      NewRelic::Agent.manual_start agent_options
       @stats_engine = NewRelic::Agent.agent.stats_engine
     end
-    
+
     def send(line)
       request = LineParser.new(line)
       NewRelic::Agent.record_transaction(
