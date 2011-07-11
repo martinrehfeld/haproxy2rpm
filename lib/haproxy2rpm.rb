@@ -38,7 +38,7 @@ module Haproxy2Rpm
   def self.default_run(log_file,options)
     EventMachine.run do
       EventMachine::file_tail(log_file) do |filetail, line|
-        @rpm.send(line)
+        @rpm.process_and_send(line)
       end
     end
   end

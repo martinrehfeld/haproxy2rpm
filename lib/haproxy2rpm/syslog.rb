@@ -8,7 +8,7 @@ module Haproxy2Rpm
 
     def receive_data(data)
       message_start_index = data.index('haproxy')
-      @rpm.send(data[message_start_index..-1])
+      @rpm.process_and_send(data[message_start_index..-1])
     end
   end
 end

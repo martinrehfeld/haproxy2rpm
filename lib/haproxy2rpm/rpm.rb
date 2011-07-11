@@ -9,7 +9,7 @@ module Haproxy2Rpm
       @qt_stat = @stats_engine.get_stats_no_scope('WebFrontend/QueueTime')
     end
 
-    def send(line)
+    def process_and_send(line)
       request = LineParser.new(line)
       NewRelic::Agent.record_transaction(
         request.tr / 1000.0,
