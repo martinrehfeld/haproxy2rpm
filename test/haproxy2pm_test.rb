@@ -2,7 +2,7 @@ $LOAD_PATH.unshift( File.dirname(__FILE__) )
 
 require 'test_helper'
 
-def log_entry(options)
+def log_entry(options = {})
   defaults = {
                 :tq => 6559,
                 :tw => 100,
@@ -22,8 +22,7 @@ end
 class Haproxy2RpmTest < Test::Unit::TestCase
   context 'parsing of haproxy files' do
     setup do
-      @line = File.open(File.join(File.dirname(__FILE__), 'fixtures', 'haproxy.log')){|f| f.readlines}.first
-      @result = Haproxy2Rpm::LineParser.new(@line)
+      @result = Haproxy2Rpm::LineParser.new(log_entry)
     end
 
     should 'parse the Tq (total time in ms spent waiting for client)' do
@@ -53,11 +52,11 @@ class Haproxy2RpmTest < Test::Unit::TestCase
     end
 
     should 'parse the http method' do
-      assert_equal 'PUT', @result.http_method
+      assert_equal 'GET', @result.http_method
     end
 
     should 'parse the uri' do
-      assert_equal '/user/login', @result.uri
+      assert_equal '/', @result.uri
     end
   end
 
@@ -70,7 +69,6 @@ class Haproxy2RpmTest < Test::Unit::TestCase
       assert !Haproxy2Rpm::LineParser.new(log_entry(:status_code => 200)).is_error?
     end
 
-  
     should 'return false for 404' do
       assert !Haproxy2Rpm::LineParser.new(log_entry(:status_code => 404)).is_error?
     end
