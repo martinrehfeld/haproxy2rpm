@@ -32,6 +32,7 @@ module Haproxy2Rpm
     end
 
     def receive_data(data)
+      puts data
       m = @syslog3164_re.match(data)
       @rpm.send(m[:message])
     end

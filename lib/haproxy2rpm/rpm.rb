@@ -7,7 +7,8 @@ module Haproxy2Rpm
     
     def send(line)
       request = LineParser.new(line)
-      @stats_engine.get_stats('Custom/HAProxy/response_times',false).record_data_point(request.tr)
+      NewRelic::Agent.record_transaction(request.tr / 1000.0, 'metric' => "Controller#{request.uri}")
+      @stats_engine.get_stats_no_scope('WebFrontend/QueueTime').record_data_point(request.tw / 1000.0)
     end
   end
 end

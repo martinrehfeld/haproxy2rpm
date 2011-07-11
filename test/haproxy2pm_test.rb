@@ -15,7 +15,7 @@ class Haproxy2RpmTest < Test::Unit::TestCase
 
     # this is the time waiting in the global queue
     should 'parse the Tw (total time in ms spent waiting in queue)' do
-      assert_equal 0, @result.tw
+      assert_equal 100, @result.tw
     end
 
     should 'parse the Tc (total time in ms spent waiting for the connection to the final server' do
@@ -36,11 +36,11 @@ class Haproxy2RpmTest < Test::Unit::TestCase
     end
 
     should 'parse the http method' do
-      assert_equal 'HEAD', @result.http_method
+      assert_equal 'PUT', @result.http_method
     end
 
     should 'parse the uri' do
-      assert_equal '/', @result.uri
+      assert_equal '/user/login', @result.uri
     end
   end
 end
