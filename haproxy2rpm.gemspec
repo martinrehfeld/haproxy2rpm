@@ -5,9 +5,9 @@ require "haproxy2rpm/version"
 Gem::Specification.new do |s|
   s.name        = "haproxy2rpm"
   s.version     = Haproxy2Rpm::VERSION
-  s.authors     = ["Patrick Huesler"]
-  s.email       = ["patrick.huesler@gmail.com"]
-  s.homepage    = ""
+  s.authors     = ["Patrick Huesler", "Martin Rehfeld"]
+  s.email       = ["patrick.huesler@wooga.com", "martin.rehfeld@wooga.com"]
+  s.homepage    = "https://github.com/wooga/haproxy2rpm"
   s.summary     = "Sending haproxy logs to new relic rpm"
   s.description = "Sending haproxy logs to new relic rpm"
   s.add_dependency "newrelic_rpm"
