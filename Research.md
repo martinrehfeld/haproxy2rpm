@@ -4,7 +4,20 @@
 # lib/new_relic/rack.rb
 # test/rpm_agent_test.rb
 # NewRelic::Agent.record_transaction 0.5, 'uri' => "/users/create?foo=bar"
+
 # NewRelic::Agent.record_transaction rand(100) / 100.0, {'metric' => 'Controller/josef'}
+# stat = NewRelic::Agent.agent.stats_engine.get_stats_no_scope 'WebFrontend/QueueTime'
+# stat.record_data_point(0.5)
+
+module NewRelic
+  module Metrics
+    CONTROLLER = "Controller"
+    DISPATCHER = "HttpDispatcher"
+    ACTIVE_RECORD = "ActiveRecord"
+    USER_TIME = "CPU/User Time"
+    MEMORY = "Memory/Physical"
+  end
+end
 
 def record_transaction(duration_seconds, options={})
   is_error = options['is_error'] || options['error_message'] ||
