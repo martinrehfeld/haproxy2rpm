@@ -36,7 +36,15 @@ module Haproxy2Rpm
     end
 
     def uri
-      @uri ||= @parts[14]
+      @uri ||= URI.parse(@parts[14])
+    end
+
+    def http_path
+      uri.path
+    end
+
+    def http_query
+      uri.query
     end
 
     def is_error?

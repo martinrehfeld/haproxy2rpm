@@ -10,12 +10,13 @@ def log_entry(options = {})
                 :tr => 147,
                 :tt => 6723,
                 :status_code => 200,
-                :uri => '/',
-                :http_method => 'GET'
+                :http_path => '/',
+                :http_method => 'GET',
+                :http_query => 'example_param=test',
             }
   defaults.merge!(options)
   log_line = <<LOG_LINE
-haproxy[674]: 127.0.0.1:33319 [15/Oct/2003:08:31:57] relais-http Srv1 #{defaults[:tq]}/#{defaults[:tw]}/#{defaults[:tc]}/#{defaults[:tr]}/#{defaults[:tt]} #{defaults[:status_code]} 243 - - ---- 1/3/5 0/0 "#{defaults[:http_method]} #{defaults[:uri]} HTTP/1.0"
+haproxy[674]: 127.0.0.1:33319 [15/Oct/2003:08:31:57] relais-http Srv1 #{defaults[:tq]}/#{defaults[:tw]}/#{defaults[:tc]}/#{defaults[:tr]}/#{defaults[:tt]} #{defaults[:status_code]} 243 - - ---- 1/3/5 0/0 "#{defaults[:http_method]} #{defaults[:http_path]}#{defaults[:http_query] ? "?#{defaults[:http_query]}" : ''} HTTP/1.0"
 LOG_LINE
 end
 
@@ -56,7 +57,11 @@ class Haproxy2RpmTest < Test::Unit::TestCase
     end
 
     should 'parse the uri' do
-      assert_equal '/', @result.uri
+      assert_equal '/', @result.http_path
+    end
+
+    should 'parse the GET params' do
+      assert_equal 'example_param=test', @result.http_query
     end
   end
 
