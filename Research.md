@@ -4,6 +4,8 @@
 # lib/new_relic/rack.rb
 # test/rpm_agent_test.rb
 # NewRelic::Agent.record_transaction 0.5, 'uri' => "/users/create?foo=bar"
+# NewRelic::Agent.record_transaction rand(100) / 100.0, {'metric' => 'Controller/josef'}
+
 def record_transaction(duration_seconds, options={})
   is_error = options['is_error'] || options['error_message'] ||
 options['exception']
