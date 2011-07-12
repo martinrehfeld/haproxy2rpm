@@ -30,3 +30,12 @@ Tell haproxy to log to syslog. e.g:
 * Apdex
 * Histogram
 * Web transactions
+
+## Known issues
+
+* Seems to stall after some time running
+* Do not run with --daemonize when used inside monit.rc
+
+## Roadmap
+
+* Improved logging and debugging (-l, --log)
