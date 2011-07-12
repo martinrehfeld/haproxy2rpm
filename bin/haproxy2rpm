@@ -10,7 +10,7 @@ options = {
   :version => false,
   :syslog => false,
   :port => 3333,
-  :listen => '0.0.0.0'
+  :address => '0.0.0.0'
 }
 
 opts = OptionParser.new do |opts|
@@ -22,8 +22,8 @@ opts = OptionParser.new do |opts|
     options[:syslog] = true
   end
 
-  opts.on("-lIP", "--listen IP", "Set IP to listen on") do |ip|
-    options[:listen] = ip
+  opts.on("-aHOST", "--address HOST", "Set host address to listen on") do |host|
+    options[:address] = host
   end
 
   opts.on("-pPORT", "--port PORT", "Set port to listen on") do |port|

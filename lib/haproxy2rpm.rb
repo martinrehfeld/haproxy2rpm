@@ -31,7 +31,7 @@ module Haproxy2Rpm
 
   def self.run_syslog_server(options)
     EventMachine::run do
-      EventMachine::open_datagram_socket(options[:listen], options[:port], SyslogHandler)
+      EventMachine::open_datagram_socket(options[:address], options[:port], SyslogHandler)
     end
   end
 
