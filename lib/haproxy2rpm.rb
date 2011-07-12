@@ -10,10 +10,15 @@ require "haproxy2rpm/syslog"
 require "haproxy2rpm/rpm"
 
 module Haproxy2Rpm
+
+  class << self 
+    attr_accessor :logger
+  end
+
   def self.run(log_file, options)
     @rpm = Rpm.new(options)
     if(options[:daemonize])
-      puts 'daemonizing'
+      logger.info 'daemonizing'
       run_daemonized(log_file, options)
     else
       if(options[:syslog])
@@ -25,7 +30,7 @@ module Haproxy2Rpm
   end
 
   def self.stop
-    puts 'stopping new relic agent'
+    logger.info 'stopping new relic agent'
     NewRelic::Agent.shutdown
   end
 
@@ -54,8 +59,8 @@ module Haproxy2Rpm
             default_run(log_file, options)
           end
         rescue => e
-          puts e.message
-          puts e.backtrace.join("\n")
+          logger.error e.message
+          logger.error e.backtrace.join("\n")
           abort "There was a fatal system error while starting haproxy2rpm"
         end
       end

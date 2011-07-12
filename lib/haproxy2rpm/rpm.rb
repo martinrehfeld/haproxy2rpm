@@ -1,7 +1,7 @@
 module Haproxy2Rpm
   class Rpm
     def initialize(options = {})
-      agent_options = {}
+      agent_options = {:log => Haproxy2Rpm.logger}
       agent_options[:app_name] = options[:app_name] if options[:app_name]
       agent_options[:env] = options[:env] if options[:env]
       NewRelic::Agent.manual_start agent_options
@@ -21,7 +21,9 @@ module Haproxy2Rpm
       end
 
       NewRelic::Agent.record_transaction(request.tr / 1000.0, params)
-      @qt_stat.record_data_point(request.tw / 1000.0)
+      Haproxy2Rpm.logger.debug "RECORDING (transaction): #{params.inspect}"
+      result = @qt_stat.record_data_point(request.tw / 1000.0)
+      Haproxy2Rpm.logger.debug "RECORDING (data point): wait time #{request.tw}, #{result.inspect}"
     end
   end
 end

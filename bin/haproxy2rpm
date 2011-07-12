@@ -4,17 +4,20 @@ $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
 require 'rubygems'
 require 'optparse'
+require 'logger'
 
 options = {
   :daemonize => false,
   :version => false,
   :syslog => false,
   :port => 3333,
-  :address => '0.0.0.0'
+  :address => '0.0.0.0',
+  :log_to => STDOUT,
+  :log_level => Logger::INFO
 }
 
 opts = OptionParser.new do |opts|
-  opts.on("-D", "--daemonize", "Daemonize") do
+  opts.on("-d", "--daemonize", "Daemonize") do
     options[:daemonize] = true
   end
 
@@ -38,6 +41,18 @@ opts = OptionParser.new do |opts|
     options[:env] = env
   end
 
+  opts.on("-PFILE", "--pid FILE", "specify Pid file") do |file|
+    options[:pid] = file
+  end
+
+  opts.on("-lFILE", "--log FILE", "File to redirect output") do |file|
+    options[:log_to] = File.open(file, 'a')
+  end
+
+  opts.on("-D", "--debug", "verbose logging") do
+    options[:log_level] = Logger::DEBUG
+  end
+
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit
@@ -51,6 +66,10 @@ end
 opts.parse!
 
 require 'haproxy2rpm'
+
+
+Haproxy2Rpm.logger = Logger.new(options[:log_to])
+Haproxy2Rpm.logger.level = options[:log_level]
 
 log_file = ARGV[0] || ''
 
