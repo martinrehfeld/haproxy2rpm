@@ -33,9 +33,8 @@ Tell haproxy to log to syslog. e.g:
 
 ## Known issues
 
-* Seems to stall after some time running
-* Do not run with --daemonize when used inside monit.rc
-
+* Daemonize is broken. Does not work nicely with new relic agent
+ 
 ## Roadmap
 
-* Improved logging and debugging (-l, --log)
+* Working daemonized mode
