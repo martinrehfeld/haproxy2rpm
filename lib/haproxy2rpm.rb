@@ -21,6 +21,7 @@ module Haproxy2Rpm
       logger.info 'daemonizing'
       run_daemonized(log_file, options)
     else
+      write_pid(options[:pid], Process.pid)
       if(options[:syslog])
         run_syslog_server(options)
       else
@@ -65,12 +66,16 @@ module Haproxy2Rpm
         end
       end
       
-      if options[:pid]
-        File.open(options[:pid], 'w') { |f| f.write pid }
-      end
+      write_pid(options[:pid], pid)
       
       ::Process.detach pid
       
       exit
+  end
+
+  def self.write_pid(pid_file, pid)
+    if pid_file
+      File.open(pid_file, 'w') { |f| f.write pid }
+    end 
   end
 end
