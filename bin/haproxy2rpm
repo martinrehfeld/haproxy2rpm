@@ -47,6 +47,7 @@ opts = OptionParser.new do |opts|
 
   opts.on("-lFILE", "--log FILE", "File to redirect output") do |file|
     options[:log_to] = File.open(file, 'a')
+    options[:log_to].sync = true
   end
 
   opts.on("-D", "--debug", "verbose logging") do
