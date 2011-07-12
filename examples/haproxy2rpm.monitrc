@@ -1,0 +1,4 @@
+check process haproxy2rpm with pidfile /var/run/haproxy2rpm.pid
+start program = "/bin/sh -c 'cd /etc/haproxy2rpm && mkdir -p log && /usr/bin/env NRCONFIG=/etc/haproxy2rpm/newrelic.yml /usr/local/bin/haproxy2rpm --address 127.0.0.1 --port 3333 --environment production --syslog --pid /var/run/haproxy2rpm.pid --log /var/log/haproxy2rpm.log --debug'"
+ stop program  = "/bin/sh -c '/bin/kill `/bin/cat /var/run/haproxy2rpm.pid`'"
+ group haproxy2rpm
