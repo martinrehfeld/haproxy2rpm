@@ -38,3 +38,12 @@ Tell haproxy to log to syslog. e.g:
 ## Roadmap
 
 * Working daemonized mode
+* Have some sort of a router for transaction recordings e.g
+  {":user_id/game/start" => 'game/start'}
+* Make processing block configurable e.g by passing the path to a ruby
+  file haproxy2rpm -c /etc/haproxy2rpm/config.rb
+
+    haproxy2Rpm.process = lambda{|recorder, request| recorder.record_transaction('user/update', request.tx) }
+
+* remove haproxy dependency and make it a more generic rpm recorder that
+  works over syslog and log files. This would allow to send custom messages to rpm by just sending log lines through syslog. The haproxy part would be more of a strategy. That means we need to make it easyly extendible without forking or creating a new gem
