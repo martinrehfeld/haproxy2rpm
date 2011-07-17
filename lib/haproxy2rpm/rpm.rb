@@ -34,6 +34,7 @@ module Haproxy2Rpm
     
     def default_message_recorder
       lambda do |request|
+        rpm_number_unit = 1000.0
         params = {
           'metric' => "Controller#{request.http_path}"
         }
@@ -43,9 +44,9 @@ module Haproxy2Rpm
           params['error_message'] = "#{request.uri} : Status code #{request.status_code}"
         end
 
-        NewRelic::Agent.record_transaction(request.tr / 1000.0, params)
+        NewRelic::Agent.record_transaction(request.tr / rpm_number_unit, params)
         Haproxy2Rpm.logger.debug "RECORDING (transaction): #{params.inspect}"
-        result = @qt_stat.record_data_point(request.tw / 1000.0)
+        result = @qt_stat.record_data_point(request.tw / rpm_number_unit)
         Haproxy2Rpm.logger.debug "RECORDING (data point): wait time #{request.tw}, #{result.inspect}"
       end
     end
