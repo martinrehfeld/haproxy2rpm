@@ -18,18 +18,22 @@ module Haproxy2Rpm
       request_recorder.call(message_parser.call(line))
     end
     
-    def message_parser
-      @message_parser ||= lambda do |line|
+    def default_message_parser
+      lambda do |line|
         LineParser.new(line)
       end
+    end
+    
+    def message_parser
+      @message_parser ||= default_message_parser
     end
     
     def message_parser=(block)
       @message_parser = block
     end
     
-    def request_recorder
-      @request_recorder ||= lambda do |request|
+    def default_message_recorder
+      lambda do |request|
         params = {
           'metric' => "Controller#{request.http_path}"
         }
@@ -42,8 +46,12 @@ module Haproxy2Rpm
         NewRelic::Agent.record_transaction(request.tr / 1000.0, params)
         Haproxy2Rpm.logger.debug "RECORDING (transaction): #{params.inspect}"
         result = @qt_stat.record_data_point(request.tw / 1000.0)
-        Haproxy2Rpm.logger.debug "RECORDING (data point): wait time #{request.tw}, #{result.inspect}"        
+        Haproxy2Rpm.logger.debug "RECORDING (data point): wait time #{request.tw}, #{result.inspect}"
       end
+    end
+    
+    def request_recorder
+      @request_recorder ||= default_message_recorder
     end
     
     def request_recorder=(block)
