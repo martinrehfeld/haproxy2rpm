@@ -37,6 +37,12 @@ class RpmTest < Test::Unit::TestCase
       @instance.process_and_send(log_entry(:http_path => "/user/check"))
     end
     
+    should 'consider routes' do
+      @instance.routes = [{:pattern => %r{^/[0-9]+/update$}, :target => '/user/update'}]
+      NewRelic::Agent.expects(:record_transaction).with(anything, has_entry('metric', 'Controller/user/update'))
+      @instance.process_and_send(log_entry(:http_path => "/49339032093/update"))
+    end
+        
     should 'record the queue time' do
       stats = mock
       @instance.qt_stat = stats

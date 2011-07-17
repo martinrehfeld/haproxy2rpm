@@ -1,6 +1,8 @@
 module Haproxy2Rpm
   class Rpm
     
+    attr_accessor :routes
+    
     def initialize(options = {})
       agent_options = {:log => Haproxy2Rpm.logger}
       agent_options[:app_name] = options[:app_name] if options[:app_name]
@@ -8,6 +10,7 @@ module Haproxy2Rpm
      NewRelic::Agent.manual_start agent_options
       @stats_engine = NewRelic::Agent.agent.stats_engine
       @qt_stat = @stats_engine.get_stats_no_scope('WebFrontend/QueueTime')
+      @routes = options[:routes] || []
     end
     
     def qt_stat=(stat)
@@ -35,8 +38,9 @@ module Haproxy2Rpm
     def default_message_recorder
       lambda do |request|
         rpm_number_unit = 1000.0
+                
         params = {
-          'metric' => "Controller#{request.http_path}"
+          'metric' => "Controller#{route_for(request.http_path)}"
         }
 
         if request.is_error?
@@ -57,6 +61,18 @@ module Haproxy2Rpm
     
     def request_recorder=(block)
       @request_recorder = block
+    end
+    
+    protected
+    
+    def route_for(path)
+      routes.each do |route|
+        match = path.match(route[:pattern])
+        if match
+          return route[:target]
+        end
+      end
+      path
     end
   end
 end
