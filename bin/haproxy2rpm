@@ -17,6 +17,10 @@ options = {
 }
 
 opts = OptionParser.new do |opts|
+  opts.on("-cFILE", "--config-file FILE", "Path to config file") do |file|
+    options[:config_file] = file
+  end
+  
   opts.on("-d", "--daemonize", "Daemonize") do
     options[:daemonize] = true
   end

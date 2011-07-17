@@ -13,6 +13,10 @@ module Haproxy2Rpm
 
   class << self 
     attr_accessor :logger
+    
+    def logger
+      @logger ||= Logger.new(STDOUT)
+    end
   end
 
   def self.run(log_file, options)
