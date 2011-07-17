@@ -1,24 +1,34 @@
 module Haproxy2Rpm
   class Rpm
     
-    attr_accessor :routes
+    attr_accessor :routes, :queue_time_stats_engine, :stats_engine
     
     def initialize(options = {})
       agent_options = {:log => Haproxy2Rpm.logger}
       agent_options[:app_name] = options[:app_name] if options[:app_name]
       agent_options[:env] = options[:env] if options[:env]
-     NewRelic::Agent.manual_start agent_options
+      NewRelic::Agent.manual_start agent_options
       @stats_engine = NewRelic::Agent.agent.stats_engine
-      @qt_stat = @stats_engine.get_stats_no_scope('WebFrontend/QueueTime')
+      @queue_time_stats_engine = @stats_engine.get_stats_no_scope('WebFrontend/QueueTime')
       @routes = options[:routes] || []
+      if options[:config_file]
+        Haproxy2Rpm.logger.info "Reading configuration from: #{options[:config_file]}"
+        content = File.open(options[:config_file]){|f| f.read }
+        instance_eval(content, options[:config_file])
+      end
     end
     
-    def qt_stat=(stat)
-      @qt_stat = stat
+    def config
+      self
     end
-
+    
     def process_and_send(line)
-      request_recorder.call(message_parser.call(line))
+      message = message_parser.call(line)
+      if(message)
+        request_recorder.call(message_parser.call(line))
+      else
+        Haproxy2Rpm.logger.warn "Parser returned an empty message from line #{line}"
+      end
     end
     
     def default_message_parser
@@ -32,10 +42,11 @@ module Haproxy2Rpm
     end
     
     def message_parser=(block)
+      Haproxy2Rpm.logger.debug "Installing custom parser"
       @message_parser = block
     end
     
-    def default_message_recorder
+    def default_request_recorder
       lambda do |request|
         rpm_number_unit = 1000.0
                 
@@ -48,19 +59,24 @@ module Haproxy2Rpm
           params['error_message'] = "#{request.uri} : Status code #{request.status_code}"
         end
 
-        NewRelic::Agent.record_transaction(request.tr / rpm_number_unit, params)
+        record_transaction(request.tr / rpm_number_unit, params)
         Haproxy2Rpm.logger.debug "RECORDING (transaction): #{params.inspect}"
-        result = @qt_stat.record_data_point(request.tw / rpm_number_unit)
+        result = queue_time_stats_engine.record_data_point(request.tw / rpm_number_unit)
         Haproxy2Rpm.logger.debug "RECORDING (data point): wait time #{request.tw}, #{result.inspect}"
       end
     end
     
     def request_recorder
-      @request_recorder ||= default_message_recorder
+      @request_recorder ||= default_request_recorder
     end
     
     def request_recorder=(block)
+      Haproxy2Rpm.logger.debug "Installing custom recorder"
       @request_recorder = block
+    end
+    
+    def record_transaction(*args)
+      NewRelic::Agent.record_transaction(*args)
     end
     
     protected

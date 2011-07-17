@@ -45,7 +45,7 @@ class RpmTest < Test::Unit::TestCase
         
     should 'record the queue time' do
       stats = mock
-      @instance.qt_stat = stats
+      @instance.queue_time_stats_engine = stats
       stats.expects(:record_data_point).with(0.01)
       @instance.process_and_send(log_entry(:tw => 10))
     end
@@ -70,7 +70,7 @@ class RpmTest < Test::Unit::TestCase
     setup do
       NewRelic::Agent.stubs(:manual_start)
       @instance = Haproxy2Rpm::Rpm.new({})
-      @instance.message_parser = lambda{|r|}
+      @instance.message_parser = lambda{ |line| line }
     end
     
     should 'allow to pass in a custom recorder' do
@@ -78,6 +78,20 @@ class RpmTest < Test::Unit::TestCase
       @instance.request_recorder = recorder
       recorder.expects(:call)
       @instance.process_and_send(log_entry)
+    end
+  end
+  
+  context 'config_file' do
+    setup do
+      NewRelic::Agent.stubs(:manual_start)
+      @instance = Haproxy2Rpm::Rpm.new({:config_file => File.join(File.dirname(__FILE__), 'fixtures', 'config.rb')})
+    end
+    
+    should 'eval the passed in config file' do
+      stats = mock
+      @instance.stats_engine.expects(:get_stats_no_scope).with('Custom/dummy').returns(stats)
+      stats.expects(:record_data_point).with(12)
+      @instance.process_and_send('12')
     end
   end
 end

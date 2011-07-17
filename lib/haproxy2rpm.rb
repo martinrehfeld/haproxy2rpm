@@ -12,7 +12,7 @@ require "haproxy2rpm/rpm"
 module Haproxy2Rpm
 
   class << self 
-    attr_accessor :logger
+    attr_accessor :logger, :rpm
     
     def logger
       @logger ||= Logger.new(STDOUT)
