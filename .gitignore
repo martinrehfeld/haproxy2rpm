@@ -5,3 +5,4 @@ pkg/*
 log/*
 newrelic.yml
 .rvmrc
+*.rbc
