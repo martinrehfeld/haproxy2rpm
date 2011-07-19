@@ -71,6 +71,7 @@ No performance testing done so fare. Judging by the results of [jordansissel](ht
 ## Known issues
 
 * Daemonize is broken. Does not work nicely with new relic agent
+* Does not work with Rubinius
  
 ## Roadmap
 
