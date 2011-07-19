@@ -36,6 +36,38 @@ Check the examples folder
 * Histogram
 * Web transactions
 
+## Supported Ruby versions
+
+Tested in production
+
+* mri-1.9.2-p180
+* ree-1.8.7-2011.03
+* mri-1.8.7-p33
+
+Passing manual integration test with test logs
+
+* mri-1.9.2-p180
+* ree-1.8.7-2011.03
+* mri-1.8.7-p33
+* jruby 1.6.2
+
+rbx-head fails to write to the local db file: 
+
+    Error serializing data to disk: #<TypeError: incompatible marshal file format (can't be read)format version 4.8 required
+
+
+Passing unit tests
+
+* mri-1.9.2-p180
+* ree-1.8.7-2011.03
+* mri-1.8.7-p33
+* rbx-head
+* jruby 1.6.2
+
+## Performance
+
+No performance testing done so fare. Judging by the results of [jordansissel](https://github.com/jordansissel/experiments/tree/master/ruby/eventmachine-speed), MRI 1.9.2 and jRuby should be the fastest.
+
 ## Known issues
 
 * Daemonize is broken. Does not work nicely with new relic agent
@@ -43,5 +75,6 @@ Check the examples folder
 ## Roadmap
 
 * Working daemonized mode
-* remove haproxy dependency and make it a more generic rpm recorder that
-  works over syslog and log files. This would allow to send custom messages to rpm by just sending log lines through syslog. The haproxy part would be more of a strategy. That means we need to make it easyly extendible without forking or creating a new gem
+* remove haproxy dependency and make it a more generic rpm recorder. Maybe change the name to log2rpm or log4rpm
+* Automated benchmarks to see how fast it performs and what Ruby version
+  might be best suited for a use case
